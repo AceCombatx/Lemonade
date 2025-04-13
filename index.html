@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemonade Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary: #f4e04d;
+            --secondary: #5cdb95;
+            --accent: #ffcc29;
+            --dark: #1a1e2e;
+            --darker: #141824;
+            --text: #ffffff;
+            --text-secondary: #b8c1ec;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-10px) translateX(-15px);
+            }
+            75% {
+                transform: translateY(15px) translateX(5px);
+            }
+        }
+        
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 3rem;
+            background-color: rgba(26, 30, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 1rem 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(92, 219, 149, 0.1) 0%, rgba(26, 30, 46, 0) 70%);
+            z-index: -1;
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            max-width: 900px;
+            line-height: 1.2;
+            text-shadow: 0 0 20px rgba(244, 224, 77, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            max-width: 700px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(92, 219, 149, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(92, 219, 149, 0.4);
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 4rem 2rem;
+            flex-wrap: wrap;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .feature-card {
+            background: rgba(26, 30, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: -1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            width: 90px;
+            height: 90px;
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .feature-icon i {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .feature-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-top: 1rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(26, 30, 46, 0.8) 0%, rgba(20, 24, 36, 0.8) 100%);
+            margin: 4rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background-color: var(--darker);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .social-link {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .features {
+                padding: 2rem 1rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <!-- Generated particles -->
+        <div class="particle" style="width: 20px; height: 20px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 15px; height: 15px; top: 20%; left: 20%; animation-delay: 1s;"></div>
+        <div class="particle" style="width: 25px; height: 25px; top: 30%; left: 30%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 10px; height: 10px; top: 40%; left: 40%; animation-delay: 3s;"></div>
+        <div class="particle" style="width: 30px; height: 30px; top: 50%; left: 50%; animation-delay: 4s;"></div>
+        <div class="particle" style="width: 18px; height: 18px; top: 60%; left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="width: 22px; height: 22px; top: 70%; left: 70%; animation-delay: 6s;"></div>
+        <div class="particle" style="width: 12px; height: 12px; top: 80%; left: 80%; animation-delay: 7s;"></div>
+        <div class="particle" style="width: 28px; height: 28px; top: 90%; left: 90%; animation-delay: 8s;"></div>
+        <div class="particle" style="width: 16px; height: 16px; top: 15%; left: 85%; animation-delay: 9s;"></div>
+        <div class="particle" style="width: 24px; height: 24px; top: 25%; left: 75%; animation-delay: 10s;"></div>
+        <div class="particle" style="width: 14px; height: 14px; top: 35%; left: 65%; animation-delay: 11s;"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-lemon"></i>
+            </div>
+            <div class="logo-text">Lemonade Bot</div>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Features</a>
+            <a href="#" class="nav-link">Documentation</a>
+            <a href="#" class="nav-link">Support</a>
+            <a href="#" class="nav-link">Premium</a>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <h1 class="hero-title">Secure Your Discord Community with Lemonade</h1>
+        <p class="hero-subtitle">
+            A powerful and refreshing Discord bot that provides robust verification, moderation, and security features to keep your server safe from bots and malicious users.
+        </p>
+        <button class="cta-button">
+            <i class="fab fa-discord"></i>
+            Add Lemonade to Discord
+        </button>
+    </section>
+    
+    <section class="features">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2 class="feature-title">100% Security</h2>
+            <p class="feature-description">
+                Advanced verification systems and anti-raid protection to keep your server safe from unwanted bots and malicious users.
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-tachometer-alt"></i>
+            </div>
+            <h2 class="feature-title">Dashboard</h2>
+            <p class="feature-description">
+                Intuitive web dashboard to customize settings, view analytics, and manage your server's security with ease.
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h2 class="feature-title">Privacy First</h2>
+            <p class="feature-description">
+                Your data stays private. We never sell or share your information and implement the highest security standards.
+            </p>
+        </div>
+    </section>
+    
+    <section class="stats">
+        <div class="stat">
+            <div class="stat-number">10,000+</div>
+            <div class="stat-label">Servers Protected</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">5M+</div>
+            <div class="stat-label">Users Verified</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Uptime</div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Lemonade Bot</div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Home</a>
+                <a href="#" class="footer-link">Features</a>
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">Support</a>
+                <a href="#" class="footer-link">Terms</a>
+                <a href="#" class="footer-link">Privacy</a>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="copyright">© 2025 Lemonade Bot. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Add more particles dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const particles = document.querySelector('.particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 20 + 5;
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 15;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.top = `${top}%`;
+                particle.style.left = `${left}%`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                particles.appendChild(particle);
+            }
+            
+            // Animate stats numbers
+            const statNumbers = document.querySelectorAll('.stat-number');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            statNumbers.forEach(number => {
+                observer.observe(number);
+            });
+        });
+    </script>
+</body>
+</html>
